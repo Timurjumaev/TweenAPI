@@ -2,7 +2,6 @@ from sqlalchemy.orm import relationship, backref
 from db import Base
 from sqlalchemy import Column, Integer, String, and_, Text
 
-from models.collections import Collections
 from models.materials import Materials
 from models.materials_categories import MaterialCategories
 from models.products import Products
@@ -39,11 +38,6 @@ class Files(Base):
                                        primaryjoin=lambda: and_(ProductsCategories.id == Files.source_id,
                                                                 Files.source == "products_category"),
                                        backref=backref("files"))
-
-    collections = relationship('Collections', foreign_keys=[source_id],
-                               primaryjoin=lambda: and_(Collections.id == Files.source_id,
-                                                        Files.source == "collection"),
-                               backref=backref("files"))
 
     products = relationship('Products', foreign_keys=[source_id],
                             primaryjoin=lambda: and_(Products.id == Files.source_id,

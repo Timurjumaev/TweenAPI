@@ -1,5 +1,5 @@
 import inspect
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from functions.works import get_works, create_work, update_work, delete_work, finish_stage, next_stage, confirmation_work
 from routes.login import get_current_active_user
@@ -41,7 +41,7 @@ def finish(ident: int = 0, db: Session = Depends(database),
 
 
 @works_router.patch("/next_stage")
-def next(work_ident: int = 0, stage_ident: int = 0, db: Session = Depends(database),
+def next(work_ident: int = Query(0), stage_ident: int = Query(0), db: Session = Depends(database),
          current_user: CreateUser = Depends(get_current_active_user)):
     role_verification(current_user, inspect.currentframe().f_code.co_name)
     next_stage(work_ident, stage_ident, db)

@@ -21,9 +21,10 @@ def get_cells(ident, search, page, limit, db):
     return pagination(items, page, limit)
 
 
-def create_cell(name, db):
+def create_cell(form, db):
     new_item_db = Cells(
-        name=name,
+        name=form.name,
+        price=form.price
     )
     save_in_db(db, new_item_db)
 

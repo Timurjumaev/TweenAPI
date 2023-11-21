@@ -42,12 +42,12 @@ def get_works(ident, page, limit, type, product_id, stage_id, cell_id, status, s
     if status:
         status_filter = Works.status
     else:
-        status_filter = Works.id > 0
+        status_filter = not Works.status
 
     if stage_status:
         stage_status_filter = Works.stage_status
     else:
-        stage_status_filter = Works.id > 0
+        stage_status_filter = not Works.status
 
     items = (db.query(Works).options(joinedload(Works.product),
                                      joinedload(Works.user),
@@ -144,6 +144,6 @@ def confirmation_work(form, db):
         raise HTTPException(status_code=400, detail="Ushbu ish allaqachon yakunlangan!")
     get_in_db(db, Cells, form.cell_id)
     db.query(Works).filter(Works.id == work.id).update({
-        Works.cell_id == form.cell_id
+        Works.cell_id: form.cell_id
     })
     db.commit()

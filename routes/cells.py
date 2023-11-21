@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from functions.cells import get_cells, create_cell, update_cell
 from routes.login import get_current_active_user
 from utils.role_verification import role_verification
-from schemas.cells import UpdateCell
+from schemas.cells import UpdateCell, CreateCell
 from schemas.users import CreateUser
 from db import database
 
@@ -24,10 +24,10 @@ def get(ident: int = 0, search: str = None,  page: int = 1,
 
 
 @cells_router.post('/create')
-def create(name: str, db: Session = Depends(database),
+def create(form: CreateCell, db: Session = Depends(database),
            current_user: CreateUser = Depends(get_current_active_user)):
     role_verification(current_user, inspect.currentframe().f_code.co_name)
-    create_cell(name, db)
+    create_cell(form, db)
     raise HTTPException(status_code=200, detail="Amaliyot muvaffaqiyatli amalga oshirildi")
 
 

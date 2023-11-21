@@ -1,6 +1,4 @@
 from sqlalchemy.orm import joinedload
-from functions.collections import delete_collection
-from models.collections import Collections
 from models.products_categories import ProductsCategories
 from utils.db_operations import get_in_db, save_in_db
 from utils.pagination import pagination
@@ -40,13 +38,4 @@ def update_products_category(form, db):
         ProductsCategories.name: form.name,
         ProductsCategories.comment: form.comment
     })
-    db.commit()
-
-
-def delete_products_category(ident, db):
-    get_in_db(db, ProductsCategories, ident)
-    items = db.query(Collections).filter(Collections.products_category_id == ident).all()
-    for item in items:
-        delete_collection(item.id, db)
-    db.query(ProductsCategories).filter(ProductsCategories.id == ident).delete()
     db.commit()

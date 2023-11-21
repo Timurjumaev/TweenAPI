@@ -2,7 +2,7 @@ import inspect
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from functions.products_categories import get_products_categories, create_products_category, \
-    update_products_category, delete_products_category
+    update_products_category
 from routes.login import get_current_active_user
 from utils.role_verification import role_verification
 from schemas.products_categories import CreateProductsCategory, UpdateProductsCategory
@@ -39,10 +39,3 @@ def update(form: UpdateProductsCategory, db: Session = Depends(database),
     update_products_category(form, db)
     raise HTTPException(status_code=200, detail="Amaliyot muvaffaqiyatli amalga oshirildi")
 
-
-@products_categories_router.delete("/delete")
-def delete(ident: int = 0, db: Session = Depends(database),
-           current_user: CreateUser = Depends(get_current_active_user)):
-    role_verification(current_user, inspect.currentframe().f_code.co_name)
-    delete_products_category(ident, db)
-    raise HTTPException(status_code=200, detail="Amaliyot muvaffaqiyatli amalga oshirildi")
