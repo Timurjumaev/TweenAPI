@@ -17,3 +17,5 @@ from models.cells import Cells
 from models.taking_materials import TakingMaterials
 from models.trades import Trades
 from models.stage_works import StageWorks
+from models.incomes import Incomes
+from models.expenses import Expenses
