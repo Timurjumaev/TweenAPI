@@ -3,15 +3,12 @@ from pydantic import BaseModel, Field
 
 
 class SourceType(str, Enum):
-    supply = "supply"
-    stage_work = "stage_work"
-    worker = "worker"
-    other = "other"
+    work = "work"
+    trade = "trade"
 
 
-class CreateExpense(BaseModel):
+class CreateIncome(BaseModel):
     source: SourceType
     source_id: int = Field(..., gt=0)
     money: float
     comment: str
-

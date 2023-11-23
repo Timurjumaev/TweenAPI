@@ -146,4 +146,11 @@ def confirmation_work(form, db):
     db.query(Works).filter(Works.id == work.id).update({
         Works.cell_id: form.cell_id
     })
+
+    if work.type == "order":
+        db.query(Customers).filter(Customers.id == work.customer_id).update({
+            Customers.balance: Customers.balance - work.amount * work.price
+        })
+
     db.commit()
+

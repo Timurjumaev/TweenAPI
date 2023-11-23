@@ -1,4 +1,6 @@
 from sqlalchemy.orm import joinedload
+
+from models.products import Products
 from utils.db_operations import get_in_db, save_in_db
 from utils.pagination import pagination
 from models.stage_works import StageWorks
@@ -43,7 +45,12 @@ def get_stage_works(ident, work_id, stage_id, worker_id, search, page, limit, db
 
 
 def create_stage_work(form, db):
-    get_in_db(db, Works, form.work_id), get_in_db(db, Stages, form.stage_id), get_in_db(db, Workers, form.worker_id)
+
+    work = get_in_db(db, Works, form.work_id)
+    stage = get_in_db(db, Stages, form.stage_id)
+    worker = get_in_db(db, Workers, form.worker_id)
+    product = get_in_db(db, Products, work.product_id)
+
     new_item_db = StageWorks(
         work_id=form.work_id,
         stage_id=form.stage_id,
@@ -52,6 +59,24 @@ def create_stage_work(form, db):
         bonus=form.bonus
     )
     save_in_db(db, new_item_db)
+
+    if stage.number == 1:
+        money = product.price1
+    elif stage.number == 2:
+        money = product.price2
+    elif stage.number == 3:
+        money = product.price3
+    else:
+        money = 0
+
+    if new_item_db.bonus > 0:
+        money += new_item_db.bonus
+
+    db.query(Workers).filter(Workers.id == worker.id).update({
+        Workers.balance: Workers.balance + (money * new_item_db.amount)
+    })
+    db.commit()
+
 
 
 

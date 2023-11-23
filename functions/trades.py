@@ -73,8 +73,18 @@ def update_trade(form, db, user):
 
 
 def confirmation_trade(ident, db):
-    get_in_db(db, Trades, ident)
+
+    trade = get_in_db(db, Trades, ident)
+    cell = get_in_db(db, Cells, trade.cell_id)
+    customer = get_in_db(db, Customers, trade.customer_id)
+
     db.query(Trades).filter(Trades.id == ident).update({
         Trades.status: True
     })
+
+    db.query(Customers).filter(Customers.id == customer.id).update({
+        Customers.balance: Customers.balance - ((cell.price - trade.discount) * trade.amount)
+    })
+
     db.commit()
+

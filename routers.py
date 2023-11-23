@@ -17,6 +17,8 @@ from routes.works import works_router
 from routes.cells import cells_router
 from routes.taking_materials import taking_materials_router
 from routes.stage_works import stage_works_router
+from routes.expenses import expenses_router
+from routes.incomes import incomes_router
 
 
 api = APIRouter()
@@ -40,3 +42,5 @@ api.include_router(cells_router)
 api.include_router(taking_materials_router)
 api.include_router(trades_router)
 api.include_router(stage_works_router)
+api.include_router(expenses_router)
+api.include_router(incomes_router)
