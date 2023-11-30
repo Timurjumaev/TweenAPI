@@ -32,7 +32,7 @@ def get_trades(ident, cell_id, customer_id, status, search, page, limit, db):
 
     if search:
         search_formatted = f"%{search}%"
-        search_filter = (Customers.name.like(search_formatted),
+        search_filter = (Customers.name.like(search_formatted) |
                          Cells.name.like(search_formatted))
     else:
         search_filter = Trades.id > 0
@@ -44,7 +44,10 @@ def get_trades(ident, cell_id, customer_id, status, search, page, limit, db):
 
 
 def create_trade(form, db, user):
-    get_in_db(db, Cells, form.cell_id), get_in_db(db, Customers, form.customer_id)
+    cell = get_in_db(db, Cells, form.cell_id)
+    get_in_db(db, Customers, form.customer_id)
+    if cell.amount < form.amount:
+        HTTPException(status_code=400, detail="Omborda yetarli mahsulot mavjud emas!")
     new_item_db = Trades(
         cell_id=form.cell_id,
         amount=form.amount,
@@ -54,13 +57,17 @@ def create_trade(form, db, user):
         discount=form.discount
     )
     save_in_db(db, new_item_db)
+    return new_item_db
 
 
 def update_trade(form, db, user):
     trade = get_in_db(db, Trades, form.id)
     if trade.status:
         raise HTTPException(status_code=400, detail="Ushbu savdo allaqachon yakunlangan!")
-    get_in_db(db, Cells, form.cell_id), get_in_db(db, Customers, form.customer_id)
+    cell = get_in_db(db, Cells, form.cell_id)
+    get_in_db(db, Customers, form.customer_id)
+    if cell.amount < form.amount:
+        HTTPException(status_code=400, detail="Omborda yetarli mahsulot mavjud emas!")
     db.query(Trades).filter(Trades.id == form.id).update({
         Trades.cell_id: form.cell_id,
         Trades.amount: form.amount,
@@ -70,6 +77,7 @@ def update_trade(form, db, user):
         Trades.discount: form.discount
     })
     db.commit()
+    return get_in_db(db, Trades, form.id)
 
 
 def confirmation_trade(ident, db):
@@ -84,6 +92,10 @@ def confirmation_trade(ident, db):
 
     db.query(Customers).filter(Customers.id == customer.id).update({
         Customers.balance: Customers.balance - ((cell.price - trade.discount) * trade.amount)
+    })
+
+    db.query(Cells).filter(Cells.id == cell.id).update({
+        Cells.amount: Cells.amount - trade.amount
     })
 
     db.commit()

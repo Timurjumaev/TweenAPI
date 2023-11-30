@@ -13,7 +13,7 @@ def get_products_categories(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (ProductsCategories.name.like(search_formatted),
+        search_filter = (ProductsCategories.name.like(search_formatted) |
                          ProductsCategories.comment.like(search_formatted))
     else:
         search_filter = ProductsCategories.id > 0

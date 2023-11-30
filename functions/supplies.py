@@ -19,8 +19,8 @@ def get_supplies(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (Materials.name.like(search_formatted),
-                         Suppliers.name.like(search_formatted),
+        search_filter = (Materials.name.like(search_formatted) |
+                         Suppliers.name.like(search_formatted) |
                          Users.name.like(search_formatted))
     else:
         search_filter = Supplies.id > 0

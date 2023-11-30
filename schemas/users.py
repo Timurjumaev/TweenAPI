@@ -63,3 +63,8 @@ class UpdateUser(BaseModel):
         if len(password) < 8:
             raise ValueError('Parol 8 tadan kam bo`lmasligi kerak')
         return password
+
+
+class CreatePermission(BaseModel):
+    id: int = Field(..., gt=0)
+    permissions: str

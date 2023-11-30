@@ -28,16 +28,14 @@ def get(ident: int = 0, cell_id: int = 0, customer_id: int = 0,
 def create(form: CreateTrade, db: Session = Depends(database),
            current_user: CreateUser = Depends(get_current_active_user)):
     role_verification(current_user, inspect.currentframe().f_code.co_name)
-    create_trade(form, db, current_user)
-    raise HTTPException(status_code=200, detail="Amaliyot muvaffaqiyatli amalga oshirildi")
+    return create_trade(form, db, current_user)
 
 
 @trades_router.put("/update")
 def update(form: UpdateTrade, db: Session = Depends(database),
            current_user: CreateUser = Depends(get_current_active_user)):
     role_verification(current_user, inspect.currentframe().f_code.co_name)
-    update_trade(form, db, current_user)
-    raise HTTPException(status_code=200, detail="Amaliyot muvaffaqiyatli amalga oshirildi")
+    return update_trade(form, db, current_user)
 
 
 @trades_router.patch("/confirmation")

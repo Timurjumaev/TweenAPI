@@ -15,7 +15,7 @@ def get_materials_categories(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (MaterialCategories.name.like(search_formatted),
+        search_filter = (MaterialCategories.name.like(search_formatted) |
                          MaterialCategories.comment.like(search_formatted))
     else:
         search_filter = MaterialCategories.id > 0

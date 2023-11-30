@@ -5,6 +5,7 @@ from routes.login import get_password_hash
 from utils.db_operations import get_in_db
 from utils.pagination import pagination
 from models.users import Users
+from fastapi import HTTPException
 
 
 def get_users(ident, search, page, limit, db):
@@ -16,7 +17,7 @@ def get_users(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (Users.name.like(search_formatted),
+        search_filter = (Users.name.like(search_formatted) |
                          Users.username.like(search_formatted))
     else:
         search_filter = Users.id > 0
@@ -71,3 +72,14 @@ def delete_user(ident, db):
         db.query(Phones).filter(Phones.id == item.id).delete()
     db.query(Users).filter(Users.id == ident).delete()
     db.commit()
+
+
+def create_permission_f(form, db):
+    user = get_in_db(db, Users, form.id)
+    if user.role != "admin":
+        raise HTTPException(status_code=400, detail="Bossga ruxsat qo'sha olmaysiz!")
+    db.query(Users).filter(Users.id == user.id).update({
+        Users.permissions: form.permissions
+    })
+    db.commit()
+

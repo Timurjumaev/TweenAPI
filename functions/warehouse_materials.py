@@ -3,6 +3,7 @@ from models.materials import Materials
 from models.materials_categories import MaterialCategories
 from models.warehouse_materials import WarehouseMaterials
 from utils.pagination import pagination
+from sqlalchemy import or_
 
 
 def get_warehouse_materials(ident, search, page, limit, db):
@@ -14,7 +15,7 @@ def get_warehouse_materials(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (Materials.name.like(search_formatted),
+        search_filter = or_(Materials.name.like(search_formatted),
                          Materials.measure.like(search_formatted),
                          MaterialCategories.name.like(search_formatted),
                          MaterialCategories.comment.like(search_formatted))

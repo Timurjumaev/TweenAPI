@@ -35,7 +35,7 @@ def create_taking_material(form, db):
     material = db.query(WarehouseMaterials).filter(WarehouseMaterials.material_id == form.material_id and
                                                    WarehouseMaterials.amount >= form.amount).first()
     if material is None:
-        raise HTTPException(status_code=400, detail="Omborda mahsulot yetarli emas1")
+        raise HTTPException(status_code=400, detail="Omborda mahsulot yetarli emas")
     new_item_db = TakingMaterials(
         material_id=form.material_id,
         amount=form.amount

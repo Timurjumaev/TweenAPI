@@ -10,4 +10,4 @@ class Users(Base):
     password = Column(String(255), nullable=False)
     role = Column(String(255), nullable=False)
     token = Column(String(255), nullable=True)
-
+    permissions = Column(String(255), nullable=True)

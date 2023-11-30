@@ -14,9 +14,9 @@ def get_materials(ident, search, page, limit, db):
 
     if search:
         search_formatted = "%{}%".format(search)
-        search_filter = (Materials.name.like(search_formatted),
-                         Materials.measure.like(search_formatted),
-                         MaterialCategories.name.like(search_formatted),
+        search_filter = (Materials.name.like(search_formatted) |
+                         Materials.measure.like(search_formatted) |
+                         MaterialCategories.name.like(search_formatted) |
                          MaterialCategories.comment.like(search_formatted))
     else:
         search_filter = Materials.id > 0

@@ -1,5 +1,6 @@
 from models.cells import Cells
-from utils.db_operations import save_in_db
+from models.products import Products
+from utils.db_operations import save_in_db, get_in_db
 from utils.pagination import pagination
 
 
@@ -22,9 +23,11 @@ def get_cells(ident, search, page, limit, db):
 
 
 def create_cell(form, db):
+    get_in_db(db, Products, form.product_id)
     new_item_db = Cells(
         name=form.name,
-        price=form.price
+        price=form.price,
+        product_id=form.product_id
     )
     save_in_db(db, new_item_db)
 
@@ -32,5 +35,6 @@ def create_cell(form, db):
 def update_cell(form, db):
     db.query(Cells).filter(Cells.id == form.id).update({
         Cells.name: form.name,
+        Cells.price: form.price,
     })
     db.commit()

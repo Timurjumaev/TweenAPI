@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from routes.login import login_router
+from routes.statistics import statistics_router
 from routes.trades import trades_router
 from routes.users import users_router
 from routes.workers import workers_router
@@ -44,3 +45,4 @@ api.include_router(trades_router)
 api.include_router(stage_works_router)
 api.include_router(expenses_router)
 api.include_router(incomes_router)
+api.include_router(statistics_router)

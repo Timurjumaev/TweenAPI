@@ -9,6 +9,7 @@ db = SessionLocal()
 class CreateCell(BaseModel):
     name: str
     price: float = Field(..., gt=0)
+    product_id: int = Field(..., gt=0)
 
     @validator('name')
     def name_validate(cls, v):

@@ -10,7 +10,6 @@ class Products(Base):
     size = Column(String(255), nullable=False)
     model = Column(String(255), nullable=False)
     colour = Column(String(255), nullable=False)
-    amount = Column(Integer, nullable=False)
     comment = Column(String(255), nullable=True)
     products_category_id = Column(Integer, nullable=False)
     price1 = Column(Numeric, nullable=False)
